@@ -7,10 +7,16 @@ if [[ "$error_state" != "0" ]];then
 fi
 }
 
+test_for_ubuntu(){
+    stat /etc/lsb-release > /dev/null 2>&1
+    check_err "Error: We are not working on a proper Ubuntu system"
+
+    stat /etc/apt/sources.list > /dev/null 2>&1
+    check_err "Error: Someone has removed your apt sources.list! This should not be true!"
+}
+
 check_ubuntu_version(){
     meerkat=10.10
-    stat /etc/lsb-release
-    check_err "Error: We are not working on a proper Ubuntu system"
 
     ubuntu_ver=$( cat /etc/lsb-release  | grep DISTRIB_RELEASE | cut -d '=' -f 2)
 
@@ -39,6 +45,7 @@ update_source(){
 }
 
 # Go!
+test_for_ubuntu
 check_ubuntu_version
 backup_source
 edit_source
