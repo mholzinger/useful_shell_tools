@@ -8,46 +8,39 @@ fi
 }
 
 test_for_ubuntu(){
-    stat /etc/lsb-release > /dev/null 2>&1
+    # source lsb-release (if this fails we aren't on an ubuntu system)
+    . /etc/lsb-release > /dev/null 2>&1
     check_err "Error: We are not working on a proper Ubuntu system"
 
     stat /etc/apt/sources.list > /dev/null 2>&1
-    check_err "Error: Someone has removed your apt sources.list! This should not be true!"
+    check_err "Error: Someone has removed your apt sources.list!"
 }
 
 check_ubuntu_version(){
     meerkat=10.10
 
-    ubuntu_ver=$( cat /etc/lsb-release  | grep DISTRIB_RELEASE | cut -d '=' -f 2)
-
-    if [ "$ubuntu_ver" == "$meerkat" ];then
+    if [ "$DISTRIB_RELEASE" == "$meerkat" ];then
         echo match meerkat
     else
-        echo "Detected Ubuntu version [$ubuntu_ver]"
+        echo "Detected Ubuntu version [$DISTRIB_DESCRIPTION $DISTRIB_CODENAME]"
         echo "This script only works with [$meerkat]"
         exit
     fi
 }
 
-backup_source(){
-    # backup sources.list file
-    sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup
-}
-
 edit_source(){
     # edit using sed
-    sudo sed -i -e 's/archive.ubuntu.com\|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list
+    sudo sed -i.backup -e 's/archive.ubuntu.com\|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list
 }
 
 update_source(){
     # update repo list
-    sudo apt-get update && sudo apt-get dist-upgrade
+    sudo apt-get update && sudo apt-get upgrade
 }
 
 # Go!
 test_for_ubuntu
 check_ubuntu_version
-backup_source
 edit_source
 update_source
 
