@@ -9,14 +9,13 @@ fi
 
 check_ubuntu_version(){
     meerkat=10.10
-
     stat /etc/lsb-release
     check_err "Error: We are not working on a proper Ubuntu system"
 
     ubuntu_ver=$( cat /etc/lsb-release  | grep DISTRIB_RELEASE | cut -d '=' -f 2)
 
-    if [ "$ubuntu_ver" == "$mav" ];then
-        echo match maverick
+    if [ "$ubuntu_ver" == "$meerkat" ];then
+        echo match meerkat
     else
         echo "Detected Ubuntu version [$ubuntu_ver]"
         echo "This script only works with [$meerkat]"
