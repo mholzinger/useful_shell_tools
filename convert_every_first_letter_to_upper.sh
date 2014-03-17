@@ -42,8 +42,17 @@ mp3_files=(*.mp3)
 cnt=${#mp3_files[@]}
 for (( idx = 0; idx < cnt; idx++ ))
 do
-    _capwords "${mp3_files[idx]}"
+	# Swap underscores for space characters
+	file_name=$( echo "${mp3_files[idx]}" | sed 's/_/\ /g')
+
+	# TODO - If a '-' character doesn't have preceding whitespace, add it!
+    # Convert all first Characters to caps
+    _capwords "$file_name"
+
+    # Echo something nice for the user to see
     echo Renaming file \""${mp3_files[idx]}"\" to \""$_CAPWORDS"\"
+
+	# Rename the file
     mv "${mp3_files[idx]}" "$_CAPWORDS"
 done
 
