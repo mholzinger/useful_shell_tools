@@ -59,6 +59,11 @@ edit_nameserver_interface()
     sudo networksetup -setdnsservers $interface $1 $2	
 }
 
+edit_searchdomain()
+{
+	sudo networksetup -setsearchdomains $interface $1
+}
+
 initializeANSI
 
 # Test for passed parameters, if none, print out DNS entry and help text
