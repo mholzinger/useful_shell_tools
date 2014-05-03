@@ -11,6 +11,7 @@ odns2=208.67.220.220
 # INTERFACE
 interface=Wi-Fi
 
+# SHELL MOD
 initializeANSI()
 {
 #  esc="\033" # if this doesn't work, enter an ESC directly
@@ -26,10 +27,8 @@ initializeANSI()
     reset="${esc}[0m";
 }
 
-# evaluate passed parameters, if none display DNS and exit with help statement
-
 # THIS SCRIPT
-prog=$( echo $0 | sed 's|^\.||' | awk '{gsub(/\/.*\//,"",$1); print}' )
+prog=$( echo $0 | sed 's|^\./||' | awk '{gsub(/\/.*\//,"",$1); print}' )
 
 print_usage()
 {
@@ -49,8 +48,7 @@ print_dns_entry()
 
     echo "Current DNS server entries on this Mac :"
     echo ${yellowf}$dns_value${reset}
-#    echo
-#    echo "Settings in /etc/resolv.conf"
+
 #    cat /etc/resolv.conf | sed '/#/d'
 #    scutil --dns | grep nameserver | cut -d : -f 2 | sort -u
 }
@@ -71,13 +69,29 @@ edit_searchdomain()
     sudo networksetup -setsearchdomains $interface $1
 }
 
+reset_dns_cache()
+{
+	# test for operating system version
+
+    # 10.4 and below
+    lookupd -flushcache
+
+	# 10.5 <> 10.6
+	sudo dscacheutil -flushcache
+
+	# 10.7 through current
+	sudo killall -HUP mDNSResponder
+}
+
 initializeANSI
 
 # Test for passed parameters, if none, print out DNS entry and help text
 if [ "$#" -lt 1 ]; then
-    print_usage
+    echo $prog": too few arguments"
+    echo "Try '"$prog" -h' for more information."
 fi
 
+# Main processing loop
 while getopts :aghop option; do
   case "${option}" in
     a)
@@ -104,6 +118,7 @@ while getopts :aghop option; do
         print_dns_entry
         exit;;
     *)
+        # Evaluate passed parameters, if none display DNS and exit with help statement
         echo $prog: illegal option -- ${OPTARG}
         print_usage
         ;;
