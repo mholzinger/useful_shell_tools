@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # After OS update, Terminal reports: 
-# Agreeing to the Xcode/iOS license requires admin privileges, please re-run as root via sudo
-xcode-select —install
+#   Agreeing to the Xcode/iOS license requires admin privileges, please re-run
+#   as root via sudo
+xcode-select --install
 sudo xcrun cc 
 
 # Brings up the cli version of the Xcode license agreement 
