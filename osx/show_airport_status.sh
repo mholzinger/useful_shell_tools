@@ -6,4 +6,4 @@
 #sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport en1 sniff 1
 
 # Help
-/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I
+/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -h
