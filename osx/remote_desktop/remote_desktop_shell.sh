@@ -20,7 +20,9 @@ enable()
 start()
 {
     sudo $KICKSTART/kickstart \
-        -clientopts -restart -agent -privs -all
+        -activate -configure -access -on \
+        -clientopts -setvnclegacy -vnclegacy yes -clientopts \
+        -restart -agent -privs -all
 }
 
 stop()
