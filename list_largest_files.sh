@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NUMRESULTS=20;
+NUMRESULTS=20
 
 # Check for null string passed (or no string)
 if [ -z "$1" ]
@@ -18,12 +18,12 @@ clear;
 date;
 df -h $FS;
 
-echo "Largest Directories:";
+echo && echo "Largest Directories:"
 du -x $FS 2>/dev/null| sort -rnk1 |\
   head -n $NUMRESULTS |\
   awk '{printf "%d MB %s\n", $1/1024,$2}';
 
-echo "Largest Files:";
+echo && echo "Largest Files:"
 nice -n 19 find $FS \
   -mount \
   -type f \
