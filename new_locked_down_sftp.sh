@@ -1,24 +1,32 @@
 # Use these commands to create a locked down sftp user
-# todo: make this a script 
 
-USERNAME=sftp_user
+if [ -z "$1" ]
+  then
+    echo "Supply a username for the ftp account as the parameter to this script"
+    exit
+fi
+
+USERNAME=$1
+
+cd /home/
 useradd -s /bin/false -m $USERNAME
-mkdir /home/$USERNAME/public
-chown $USERNAME: /home/$USERNAME/public
+mkdir /home/$USERNAME/files
+chown $USERNAME: /home/$USERNAME/files
 chown root:wheel /home/$USERNAME
 chmod -R go-w /home/$USERNAME
-chmod 755 sftp_user/
+chmod 755 /home/$USERNAME
 
-vi /etc/ssh/sshd_config
+cat >> /etc/ssh/sshd_config <<EOL
+Match User $USERNAME
+        ChrootDirectory /home/$USERNAME
+      	X11Forwarding no
+   	    AllowTcpForwarding no
+        ForceCommand internal-sftp
+EOL
 
-```
- Match User sftp_user
-         ChrootDirectory /home/sftp_user
-       	 X11Forwarding no
-       	 AllowTcpForwarding no
-         ForceCommand internal-sftp
-```
+NEW_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 
-passwd sftp_user
+echo enter new password for $USERNAME : $NEW_PASS
+
+passwd "$USERNAME" --stdin
 /etc/init.d/sshd restart
-
