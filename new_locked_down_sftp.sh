@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Use these commands to create a locked down sftp user
 
 if [ "$EUID" -ne 0 ]
