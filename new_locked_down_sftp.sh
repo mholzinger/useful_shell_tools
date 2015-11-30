@@ -11,13 +11,20 @@ if [ -z "$1" ]
     exit
 fi
 
+check_err(){ error_state=$(echo $?)
+if [[ "$error_state" != "0" ]];then
+    echo $1
+    exit
+fi
+}
+
 USERNAME=$1
 
 cd /home/
 useradd -s /bin/false -m $USERNAME
 mkdir /home/$USERNAME/files
 chown $USERNAME: /home/$USERNAME/files
-chown root:wheel /home/$USERNAME
+chown root /home/$USERNAME
 chmod -R go-w /home/$USERNAME
 chmod 755 /home/$USERNAME
 
@@ -30,14 +37,17 @@ Match User $USERNAME
 EOL
 
 NEW_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+echo "$USERNAME":"$NEW_PASS" | chpasswd
 
-echo Password for $USERNAME : $NEW_PASS
+# Restart SSH
+DIST=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
+if [ "$DIST" == "Ubuntu" ]; then
+    service ssh restart
+else
+    /etc/init.d/sshd restart
+fi
 
-echo "$NEW_PASS" | passwd "$USERNAME" --stdin
-
-/etc/init.d/sshd restart
-
-IPADDY=$(curl -s icanhazip.com -4)
+IPADDY=$(curl -s whatismyip.akamai.com -4)
 
 echo -------------------------
 echo Credentials
