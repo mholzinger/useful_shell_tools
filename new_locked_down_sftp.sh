@@ -31,8 +31,8 @@ chmod 755 /home/$USERNAME
 cat >> /etc/ssh/sshd_config <<EOL
 Match User $USERNAME
         ChrootDirectory /home/$USERNAME
-      	X11Forwarding no
-   	    AllowTcpForwarding no
+        X11Forwarding no
+        AllowTcpForwarding no
         ForceCommand internal-sftp
 EOL
 
@@ -53,5 +53,5 @@ echo -------------------------
 echo Credentials
 echo Username: $USERNAME
 echo password: $NEW_PASS
-echo 
+echo -------------------------
 echo sftp command: sftp $USERNAME@$IPADDY
