@@ -13,13 +13,6 @@ if [ -z "$1" ]
     exit
 fi
 
-check_err(){ error_state=$(echo $?)
-if [[ "$error_state" != "0" ]];then
-    echo $1
-    exit
-fi
-}
-
 USERNAME=$1
 
 cd /home/
@@ -38,14 +31,22 @@ Match User $USERNAME
         ForceCommand internal-sftp
 EOL
 
+# NOTE: If ftp subsystem fails after client connects, comment out sftp-server in /etc/ssh/sshd_config
+#
+# Comment out the matching line below
+# Subsystem sftp /usr/lib/openssh/sftp-server/
+#
+# Edit in the edit in and uncomment the line below
+# Subsystem sftp internal-sftp 
+
 NEW_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 echo "$USERNAME":"$NEW_PASS" | chpasswd
 
 # Restart SSH
-DIST=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
-if [ "$DIST" == "Ubuntu" ]; then
+. /etc/lsb-release > /dev/null 2>&1
+if [ "$DISTRIB_ID" == "Ubuntu" ]; then
     service ssh restart
-else
+  else
     /etc/init.d/sshd restart
 fi
 
