@@ -18,5 +18,5 @@ rsync -avzh $SSH_USER@$REMOTE_IP:$DESTINATION $SOURCE --dry-run
 # Copy/Sync a File on a Local Computer (creates directory is one isn't there)
 rsync -azvh $SOURCE $DESTINATION --dry-run
 
-# RaspberryPi crashing when you use rsync? Try these commands parameters to throttle the output
+# RaspberryPi crashing when you use rsync? Try these command parameters to throttle the output
 /usr/bin/rsync --delay-updates --bwlimit=1000 -avz $SOURCE SSH_USER@$REMOTE_IP:$DESTINATION
