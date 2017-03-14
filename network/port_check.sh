@@ -16,5 +16,5 @@ if [ ! -z "$2" ]; then
 fi
 
 #Now let's use netcat : nc -zv google.com 22
-nc -zv $1 $port_to_test
+nc -zv "$1" "$port_to_test"
 
