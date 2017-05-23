@@ -7,7 +7,7 @@ if [ -z "$1" ]
   then
     FS='/';
   else 
-    FS=$1
+    FS="$1"
 fi
 
 # Clear terminal
@@ -16,18 +16,18 @@ clear;
 
 # Print header
 date;
-df -h $FS;
+df -h "$FS";
 
 echo && echo "Largest Directories:"
-du -x $FS 2>/dev/null| sort -rnk1 |\
+du -x "$FS" 2>/dev/null| sort -rnk1 |\
   head -n $NUMRESULTS |\
-  awk '{printf "%d MB %s\n", $1/1024,$2}';
+  awk '{printf "%d MB - ", $1; for (i=2; i<=NF; i++) printf "%s ",$i;printf "\n"}'
 
 echo && echo "Largest Files:"
-nice -n 19 find $FS \
+nice -n 19 find "$FS" \
   -mount \
   -type f \
   -ls 2>/dev/null |\
   sort -rnk7 |\
   head -n $NUMRESULTS |\
-  awk '{printf "%d MB\t%s\n", ($7/1024)/1024,$NF}'
+  awk '{printf "%d MB - ", ($7/1024)/1024; for (i=11; i<=NF; i++) printf "%s ",$i;printf "\n"}'
