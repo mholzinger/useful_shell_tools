@@ -21,7 +21,7 @@ df -h "$FS";
 echo && echo "Largest Directories:"
 du -x "$FS" 2>/dev/null| sort -rnk1 |\
   head -n $NUMRESULTS |\
-  awk '{printf "%d MB - ", $1; for (i=2; i<=NF; i++) printf "%s ",$i;printf "\n"}'
+  awk '{printf "%d MB - ", $1/1024; for (i=2; i<=NF; i++) printf "%s ",$i;printf "\n"}'
 
 echo && echo "Largest Files:"
 nice -n 19 find "$FS" \
