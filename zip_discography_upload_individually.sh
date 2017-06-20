@@ -2,6 +2,12 @@
 
 receipt=transfer_list.txt
 
+the_path='*/'
+
+if [ ! -z "$1" ]; then
+    IFS= the_path=$1
+fi
+
 # Upload to transfer.sh
 transfer()
 {
@@ -30,10 +36,10 @@ if [ -f $receipt ]; then
 fi
 
 # Find directories with albums, then zip them
-for dir in */
+for dir in "$the_path"
 do
     echo zipping $dir
-    output_name=$( echo "$dir" | sed -e 's/ /\_/g' -e 's/\//\.zip/g')
+    output_name=$( basename "$dir" | sed -e 's/ /\_/g' -e 's/\//\.zip/g')
 
     zip -r -X "$output_name"  "$dir"
  
