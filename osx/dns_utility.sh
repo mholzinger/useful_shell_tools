@@ -8,6 +8,10 @@ gdns2=8.8.4.4
 odns1=208.67.222.222
 odns2=208.67.220.220
 
+# CLOUDFLARE
+cdns1=1.1.1.1
+cdns2=1.0.0.1
+
 # INTERFACE
 interface=Wi-Fi
 
@@ -16,14 +20,14 @@ initializeANSI()
 {
 #  esc="\033" # if this doesn't work, enter an ESC directly
     esc=""
-    blackf="${esc}[30m";   
-    redf="${esc}[31m";    
+    blackf="${esc}[30m";
+    redf="${esc}[31m";
     greenf="${esc}[32m";
-    yellowf="${esc}[33m";   
-    bluef="${esc}[34m";   
+    yellowf="${esc}[33m";
+    bluef="${esc}[34m";
     purplef="${esc}[35m";
-    cyanf="${esc}[36m";    
-    whitef="${esc}[37m";  
+    cyanf="${esc}[36m";
+    whitef="${esc}[37m";
     reset="${esc}[0m";
 }
 
@@ -61,7 +65,7 @@ edit_nameserver_interface()
     else
         echo "New entries :" ${yellowf}$1 $2${reset}
     fi
-    sudo networksetup -setdnsservers $interface $1 $2    
+    sudo networksetup -setdnsservers $interface $1 $2
 }
 
 edit_searchdomain()
@@ -92,13 +96,18 @@ if [ "$#" -lt 1 ]; then
 fi
 
 # Main processing loop
-while getopts :aghop option; do
+while getopts :acghop option; do
   case "${option}" in
     a)
         a=${OPTARG}
         echo "Setting" [$interface] "interface to DNS autoassign from DHCP"
         edit_nameserver_interface empty
         exit;;
+    c)
+        a=${OPTARG}
+        echo "Setting" [$interface] "interface to Cloudflare DNS"
+        edit_nameserver_interface $cdns1 $cdns2
+      exit;;
     g)
         a=${OPTARG}
         echo "Setting" [$interface] "interface to Google DNS"
@@ -124,4 +133,3 @@ while getopts :aghop option; do
         ;;
   esac
 done
-
