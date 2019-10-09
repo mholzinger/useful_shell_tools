@@ -12,7 +12,8 @@ fi
 osx=""
 osx_minor=""
 high_sierra=13
-mohave=14
+mojave=14
+catalina=15
 
 determine_osx_release()
 {
@@ -37,11 +38,7 @@ if (( osx_minor <= high_sierra )); then
 fi
 
 # 10.14 through current
-if (( osx_minor >= mohave )); then
-  # Mohave
-  # Download Command line tools for XCode
-  # From: https://developer.apple.com/download/more/?=for%20Xcode
-  # Download: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg
+if (( osx_minor >= catalina )); then
 
   sudo xcode-select --switch /Applications/Xcode.app
 
@@ -52,8 +49,13 @@ if (( osx_minor >= mohave )); then
   echo "1) Sign into apple for newest command line tools:"
   echo "Sign in: https://developer.apple.com/download/more/?=for%20Xcode"
   echo
-  echo "2) Download link:"
-  echo "Download: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg"
+  echo "2) Download link(s):"
+  if (( osx_minor == mojave )); then
+    echo "Download [Mojave]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg"
+  fi
+  if (( osx_minor == catalina ));then
+    echo "Download [Catalina]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta/Command_Line_Tools_for_Xcode_11.2_beta.dmg"
+  fi
   echo
   echo "3) Install new tools and then run:"
   echo "sudo xcode-select --switch /Library/Developer/CommandLineTools/"
