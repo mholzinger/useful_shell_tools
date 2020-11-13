@@ -9,7 +9,12 @@ if [ "$EUID" -ne 0 ]; then
     exit
 fi
 
+# Major Revs
 osx=""
+big_sur=11
+osx_legacy=10
+
+# Minor revs
 osx_minor=""
 high_sierra=13
 mojave=14
@@ -17,7 +22,7 @@ catalina=15
 
 determine_osx_release()
 {
-    osx=$( sw_vers -productVersion )
+    osx=$( sw_vers -productVersion | awk -F \. {'print $1}' )
     osx_minor=$( sw_vers -productVersion | awk -F \. {'print $2}' )
 }
 
@@ -32,13 +37,13 @@ determine_osx_release
 # After OS update, Terminal reports:
 #   Agreeing to the Xcode/iOS license requires admin privileges, please re-run
 #   as root via sudo
-if (( osx_minor <= high_sierra )); then
+if (( osx_minor <= high_sierra )) && (( osx == osx_legacy )); then
   xcode-select --install
   sudo xcrun cc
 fi
 
 # 10.14 through current
-if (( osx_minor >= catalina )); then
+if (( osx_minor >= catalina )) || (( osx >= big_sur )); then
 
   sudo xcode-select --switch /Applications/Xcode.app
 
@@ -56,6 +61,10 @@ if (( osx_minor >= catalina )); then
   if (( osx_minor == catalina ));then
     echo "Download [Catalina]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta/Command_Line_Tools_for_Xcode_11.2_beta.dmg"
   fi
+  if (( osx >= big_sur )); then
+    echo "Download [Big Sur]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12.2/Command_Line_Tools_for_Xcode_12.2.dmg"
+  fi
+
   echo
   echo "3) Install new tools and then run:"
   echo "sudo xcode-select --switch /Library/Developer/CommandLineTools/"
