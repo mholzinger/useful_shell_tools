@@ -58,11 +58,8 @@ if (( osx_minor >= catalina )) || (( osx >= big_sur )); then
   if (( osx_minor == mojave )); then
     echo "Download [Mojave]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg"
   fi
-  if (( osx_minor == catalina ));then
-    echo "Download [Catalina]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta/Command_Line_Tools_for_Xcode_11.2_beta.dmg"
-  fi
-  if (( osx >= big_sur )); then
-    echo "Download [Big Sur]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12.2/Command_Line_Tools_for_Xcode_12.2.dmg"
+  if (( osx_minor == catalina )) || (( osx >= big_sur )); then
+    echo "Download [Catalina / Big Sur]: https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12.2/Command_Line_Tools_for_Xcode_12.2.dmg"
   fi
 
   echo
