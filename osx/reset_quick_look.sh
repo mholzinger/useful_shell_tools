@@ -4,3 +4,6 @@ rm -f ~/Library/Containers/com.apple.quicklook.ui.helper/Data/Library/Preference
 rm -f ~/Library/Preferences/com.apple.QuickLookDaemon.plist
 qlmanage -r cache
 qlmanage -r
+
+# If quicklook REALLY wont restart gracefully
+# killall Finder
